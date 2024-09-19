@@ -10,7 +10,13 @@ export const signup = async (req,res) => {
             return res.status(400).json({message: "Password do not match"});
         }
 
-        const user = await User.findOne({username});
+        let user;
+        try {
+            user = await User.findOne({username});
+        } catch (error) {
+            console.log("Error connecting to the database", error.message);
+            return res.status(500).json({error: "Database connection error"});
+        }
 
         if(user){
             return res.status(400).json({message: "User already exists"});
@@ -57,15 +63,15 @@ export const loginUser = async (req,res) => {
     try {
         const {username, password} = req.body;
         const user = await User.findOne({username});
-        
+
         if(!user){
-            return res.status(400).json({message: "User Not Found"});
+            return res.status(400).json({error: "Invalid Username or Password"});
         }
-        
-        const isPasswordCorrect = await bcrypt.compare(password,user.password || "");
+
+        const isPasswordCorrect = (await bcrypt.compare(password, user.password));
         
         if(!isPasswordCorrect){
-            return res.status(400).json({message: "Wrong Password"});
+            return res.status(400).json({error: "Invalid Password"}); 
         }
 
         generateTokenAndSetCookie(user._id,res);
