@@ -4,7 +4,6 @@ import Message from "../models/message.model.js";
 export const sendMessage = async (req, res) => {
     try {
         const { message } = req.body;
-        console.log("Request body:", req.body);  // Add this line to debug
 
         const { id: recieverId } = req.params;
 
@@ -60,11 +59,10 @@ export const getMessages = async (req,res) => {
             }
         }).populate("messages");//NOT REFERENCE BUT ACTUAL MESSAGES
 
-        if (!conversation) {
-            return res.status(404).json({ error: "No Conversation found" });
-        }
+        if (!conversation) return res.status(200).json([]);
 
-        res.status(200).json(conversation.messages);
+        const messages = conversation.messages;
+        res.status(200).json(messages);
     } catch (error) {
         console.log("Error in getMessages controller", error.message);
         res.status(500).json({ error: "Internal Server Error" });

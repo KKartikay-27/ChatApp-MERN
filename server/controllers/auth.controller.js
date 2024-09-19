@@ -30,7 +30,7 @@ export const signup = async (req,res) => {
         //https://avatar.iran.liara.run/
 
         const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
-        const girlProfilePic = `https://avatar.iran.liara.run/public/image?username=${username}`;
+        const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
         
         const newUser = new User({
                 fullName,
